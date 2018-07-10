@@ -1,0 +1,8 @@
+/*USERS*/
+VPS - Vitor Silva <sirmochi45 at gmail.com>
+/*ROADMAP*/
+VPS - Generate Project
+VPS - Add MIT LICENSE
+VPS - npm init .
+VPS - PROJECT::require node 8 (lts as july/2018)
+VPS - PROJECT::require koa (npm i koa)

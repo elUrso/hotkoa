@@ -1,0 +1,26 @@
+{
+  "name": "hotkoa",
+  "version": "1.0.0",
+  "description": "A hotsite made using koa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elUrso/hotkoa.git"
+  },
+  "keywords": [
+    "koa",
+    "hotsite"
+  ],
+  "author": "Vitor Silva",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/elUrso/hotkoa/issues"
+  },
+  "homepage": "https://github.com/elUrso/hotkoa#readme",
+  "dependencies": {
+    "koa": "^2.5.1"
+  }
+}

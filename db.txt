@@ -1,0 +1,7 @@
+Data base scheme
+
+USER
+*Email - SecretHash - Status
+
+INFO
+$(USER) - ...

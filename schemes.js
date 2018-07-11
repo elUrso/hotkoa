@@ -1,12 +1,21 @@
 //DB Setting up
 const drop_users =
 "DROP TABLE users;"
+
+const drop_sessions =
+"DROP TABLE sessions;"
+
 const user_table =
-"CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255) NOT NULL,hash VARCHAR(255) NOT NULL);"
+"CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255) NOT NULL,hash VARCHAR(255) NOT NULL, info TEXT);"
 const dummy_user =
-"INSERT INTO users (email, hash) VALUES ('test@name.com', 'password');"
+"INSERT INTO users (email, hash, info) VALUES ('test@name.com', 'password', '{}');"
+
 const select_users =
 "SELECT * FROM users;"
+
+const session_table =
+"CREATE TABLE sessions(id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, user_id INT(6) UNSIGNED NOT NULL, valid DATE NOT NULL, status TINYINT(1) UNSIGNED NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id));"
+// Date is in format YYYY-MM-DD
 
 const mysql = require('mysql')
 const db_con = mysql.createConnection({
@@ -27,9 +36,19 @@ db_con.query(drop_users, function (error, result) {
                 console.log(result)
              })
 
+db_con.query(drop_sessions, function (error, result) {
+                console.log(error)
+                console.log(result)
+             })
+
 db_con.query(user_table, function (error, result) {
                     console.log(error)
                     console.log(result)
+             })
+
+db_con.query(session_table, function (error, result) {
+             console.log(error)
+             console.log(result)
              })
 
 db_con.query(dummy_user, function (error, result) {

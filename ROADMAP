@@ -6,5 +6,8 @@ VPS - Add MIT LICENSE
 VPS - npm init .
 VPS - PROJECT::require node 8 (lts as july/2018)
 VPS - PROJECT::require koa (npm i koa)
+VPS - SET koa
+VPS - Moved main site mockup to new server
+VPS - PROJECT::require koa-bodyparse, mysql, @koa/cors
 /*WORKHOURS*/
 2018/06/11 - 13:20 -> ?

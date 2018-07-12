@@ -18,6 +18,7 @@
     --header-bg-color: rgb(0, 113, 140);
     --red: rgb(255, 2, 76);
     --green: rgb(0, 113, 140);
+    --yellow: rgb(255, 224, 59);
 }
 
 body {
@@ -155,7 +156,7 @@ p {
 @media screen and (max-width: 1200px) {
     .img-hand1 {
         position: relative;
-        left: calc(100% - 1200px)
+        left: calc(100% - 1200px);
     }
 }
 
@@ -207,7 +208,8 @@ p {
     border-radius: 1.5rem;
     padding: 0.3rem 1.2rem 0.8rem 1.2rem;
     height: 1em;
-    margin-bottom: 1rem;    color: var(--red);
+    margin-bottom: 1rem;
+    color: var(--red);
     border: 2px solid var(--red);
     transition: background-color 0.2s, color 0.2s;
 }
@@ -245,7 +247,26 @@ p {
     max-width: 30em;
     text-align: center;
     flex-flow: column;
-    padding-bottom: 2rem;
+    padding: 0rem 1rem 2rem 1rem;
+}
+
+.descricao {
+    z-index: 1;
+    background-color: var(--yellow);
+    align-self: start;
+    justify-self:stretch;
+    text-align: left;
+    padding: 0rem 1rem 2rem 12rem;
+}
+
+.queminscreve {
+    max-width: 40rem;
+}
+
+@media screen and (max-width: 1366px) {
+    .descricao {
+        padding-left: calc(12rem - (1366px - 100vw) * 0.2);
+    }
 }
 
 

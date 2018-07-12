@@ -9,12 +9,14 @@ const user_table =
 "CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255) NOT NULL,hash VARCHAR(255) NOT NULL, info TEXT);"
 const dummy_user =
 "INSERT INTO users (email, hash, info) VALUES ('test@name.com', 'password', '{}');"
+const foo_user =
+"INSERT INTO users (email, hash, info) VALUES ('foo', '5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8', '{}');"
 
 const select_users =
 "SELECT * FROM users;"
 
 const session_table =
-"CREATE TABLE sessions(id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, user_id INT(6) UNSIGNED NOT NULL, valid DATE NOT NULL, status TINYINT(1) UNSIGNED NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id));"
+"CREATE TABLE sessions(id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, user_id INT(6) UNSIGNED NOT NULL, valid DATE NOT NULL, status TINYINT(1) UNSIGNED NOT NULL, hash VARCHAR(255) NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id));"
 // Date is in format YYYY-MM-DD
 
 const mysql = require('mysql')
@@ -52,14 +54,19 @@ db_con.query(session_table, function (error, result) {
              })
 
 db_con.query(dummy_user, function (error, result) {
-                    console.log(error)
-                    console.log(result)
+                console.log(error)
+                console.log(result)
+             })
+
+db_con.query(foo_user, function (error, result) {
+                console.log(error)
+                console.log(result)
              })
 
 db_con.query(select_users, function (error, results, fields) {
-             console.log(error)
-             console.log(results)
-             console.log(fields)
+                console.log(error)
+                console.log(results)
+                console.log(fields)
              })
 
 db_con.end();

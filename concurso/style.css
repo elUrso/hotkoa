@@ -58,6 +58,15 @@ p {
     font-size: 1.2rem;
 }
 
+ul {
+    list-style-type: none;
+}
+
+li {
+    font-size: 1.2rem;
+    padding-bottom: 0.2rem;
+}
+
 #container {
     width: 100vw;
     max-width: 1366px;
@@ -299,7 +308,6 @@ p {
 @media screen and (max-width: 1366px) {
     .descricao {
         padding-left: calc(12rem - (1366px - 100vw) * 0.16);
-        padding-right: calc(12rem - (1366px - 100vw) * 0.16);
     }
     
     .img-hand2>img {
@@ -308,6 +316,9 @@ p {
 }
 
 @media screen and (max-width: 1000px) {
+    .descricao {
+        padding-right: calc(12rem - (1366px - 100vw) * 0.16);
+    }
     .img-hand2>img {
         position: relative;
         left: 600px;
@@ -327,7 +338,7 @@ p {
 }
 
 .fix-padding-regulamento {
-    padding: 0.3rem 1.5rem 0.8rem 1.5rem;
+    padding: 0.3rem 1.8rem 0.8rem 1.8rem;
 }
 
 @media screen and (max-width: 370px) {

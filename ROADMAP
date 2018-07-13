@@ -9,7 +9,8 @@ VPS - PROJECT::require koa (npm i koa)
 VPS - SET koa
 VPS - Moved main site mockup to new server
 VPS - PROJECT::require koa-bodyparse, mysql, @koa/cors
+VPS - Basic layout done
 /*WORKHOURS*/
 2018/06/11 - 13:20 -> 22:20
-2018/06/12 - 12:20 -> ?
+2018/06/12 - 12:20 -> 22:20
 

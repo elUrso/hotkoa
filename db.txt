@@ -1,7 +1,42 @@
-Data base scheme
+Ficha de inscrição
 
-USER
-*Email - SecretHash - Status
+Dados do participante
 
-INFO
-$(USER) - ...
+Nome:
+Endereço:
+
+RG ou RNE:
+CPF:
+
+E-mail:
+Telefone:
+Telefone2: opcional
+
+Comprovante de docencia e documentos (PDF max 20mb)
+
+--
+
+Formulário do projeto
+
+Categoria
+
+Tema
+
+Titulo da iniciativa
+
+Data da implantação
+
+Nome da instituição
+Unidade Administrativa
+
+
+
+Link do vídeo
+
+Comprovante de docência ?
+
+-- Gerar uma matrícula -->
+Enviar um email para blabla@
+
+Acompanha pelo CPF
+

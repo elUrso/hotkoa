@@ -10,6 +10,6 @@ const smooth = (id) => {
     let origin = window.pageYOffset
     let destination = document.querySelector(id).offsetTop
     let diff = destination - origin
-    let time = 40
+    let time = 80
     smoothYScrool(diff, time)
 }

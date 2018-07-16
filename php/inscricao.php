@@ -20,6 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" media="screen" href="inscricao.css"/>
     <title>Inscrição</title>
 </head>
 <body>
@@ -35,13 +36,16 @@ echo $status;
     <p>Segundo nome (ex: Silveira Silva):</p>
     <input type="text" name="secondname"/>
     <p class="error"></p>
-    <p>RG ou RNE (somente números, . ou -):</p>
+    <p>RG ou RNE:</p>
     <input type="text" name="rg"/>
     <p class="error"></p>
     <p>CPF (somente números):</p>
     <input type="text" name="cpf"/>
     <p class="error"></p>
     <h3>Endereço:</h3>
+    <p>CEP:</p>
+    <input type="text" name="street"/>
+    <p class="error"></p>
     <p>Rua:</p>
     <input type="text" name="street"/>
     <p class="error"></p>
@@ -58,7 +62,35 @@ echo $status;
     <input type="text" name="city"/>
     <p class="error"></p>
     <p>Estado:</p>
-    <input type="text" name="state"/>
+    <select name="state">
+        <option value="AC">AC</option>
+        <option value="AL">AL</option>
+        <option value="AP">AP</option>
+        <option value="AM">AM</option>
+        <option value="BA">BA</option>
+        <option value="CE">CE</option>
+        <option value="DF">DF</option>
+        <option value="ES">ES</option>
+        <option value="GO">GO</option>
+        <option value="MA">MA</option>
+        <option value="MT">MT</option>
+        <option value="MS">MS</option>
+        <option value="MG">MG</option>
+        <option value="PA">PA</option>
+        <option value="PB">PB</option>
+        <option value="PR">PR</option>
+        <option value="PE">PE</option>
+        <option value="PI">PI</option>
+        <option value="RJ">RJ</option>
+        <option value="RN">RN</option>
+        <option value="RS">RS</option>
+        <option value="RO">RO</option>
+        <option value="RR">RR</option>
+        <option value="SC">SC</option>
+        <option value="SP">SP</option>
+        <option value="SE">SE</option>
+        <option value="TO">TO</option>
+    </select>
     <p class="error"></p>
     <h3>Contato:</h3>
     <p>E-mail:</p>
@@ -68,18 +100,31 @@ echo $status;
     <input type="text" name="emailverify"/>
     <p class="error"></p>
     <p>Telefone principal:</p>
-    <input type="text" name="ddd1"/>
+    (0<input type="text" class="ddd" name="ddd1"/>)
     <input type="text" name="phone1"/>
     <p class="error"></p>
     <p>Telefone secundário:</p>
-    <input type="text" name="ddd2"/>
+    (0<input type="text" class="ddd" name="ddd2"/>)
     <input type="text" name="phone2"/>
+    <p class="error"></p>
+    <p>Cargo:</p>
+    <input type="text" name="role"/>
+    <p class="error"></p>
+    <p>Formação Acadêmica:</p>
+    <input type="text" name="degree"/>
     <p class="error"></p>
     <h3>Comprovante de Docência</h3>
     <p>Documento no formato PDF com tamanho máximo de 10MB</p>
     <input type="file" name="pdfdocument"/>
     <p class="error"></p>
-    <h2>Dados do projeto</h2>
+    <h2>Dados da Instituição</h2>
+    <p>Nome da instituição:</p>
+    <input type="text" name="institution"/>
+    <p class="error"></p>
+    <p>Unidade administrativa:</p>
+    <input type="text" name="unity"/>
+    <p class="error"></p>
+    <h2>Dados do Projeto</h2>
     <p>Categoria do projeto:</p>
     <select name="category">
         <option value="">Educação Infantil</option>
@@ -98,19 +143,56 @@ echo $status;
     <input type="text" name="title"/>
     <p class="error"></p>
     <p>Data da implatação:</p>
+    <span class="observation">A iniciativa deve ter no máximo 1 (um) ano de implantação, estar em implantação.</span><br/>
     <input type="date" name="date"/>
-    <p class="error"></p>
-    <p>Nome da instituição:</p>
-    <input type="text" name="institution"/>
-    <p class="error"></p>
-    <p>Unidade administrativa:</p>
-    <input type="text" name="unity"/>
     <p class="error"></p>
     <p>Link do video ou reportagem sobre o projeto:</p>
     <input type="text" name="video"/>
     <p class="error"></p>
-    <p>Ao marcar a caixa a seguir, você concorda com todos os termos do regulmaneto do concurso: <input type="checkbox" name="agree" value="1"/></p>
+    <h3>Resumo da Iniciativa:</h3>
+    <span class="observation">Resumo da iniciativa com no máximo 250 palavras em parágrafo único e citando a criatividade e inovação visadas pela iniciativa.</span><br/>
+    <textarea id="summary" type="text" name="summary" rows="25" cols="60" onkeyup="wordcount();"></textarea><br/>
+    <span id="count"></span>
+    <p class="error"></p>
+    <p>Integrantes da equipe de desenvolvimento da iniciativa (caso haja)</p>
+    <input type="hidden" name="memberscounter" id="memberscounter" value="1"/>
+    <div class="members" id="members">
+    </div>
+    <button type="button" onclick="addmember();">Adicionar integrante</button>
+    <p>Parceiros da iniciativa (caso haja)</p>
+    <span class="observation">Órgãos, instituições e/ou entidades parceiras no desenvolvimento da iniciativa.</span><br/>
+    <input type="hidden" name="partnerscounter" id="partnerscounter" value="1"/>
+    <div class="partners" id="partners">
+    </div>
+    <button type="button" onclick="addpartner();">Adicionar parceiro</button>
+    <p>Ao marcar a caixa a seguir, afirmo que li a Portaria que dispõe sobre o Concurso Cultural Prêmio Instituto Criativo de Educação, Criatividade e Inovação, a que estabelece procedimentos para as inscrições e apresentação dos trabalhos no Concurso Cultural Prêmio de Educação, Criatividade e Inovação – 2018 e todas as instruções para o preenchimento da Ficha de Inscrição e do Relato da Iniciativa. Estou ciente das regras estabelecidas e sou inteiramente responsável pelas informações prestadas.
+    <input type="checkbox" name="agree" value="1"/></p>
     <input type="submit" value="Finalizar inscrição"/>
 </form>
+<script>
+const wordcount = () => {
+    const text = document.querySelector("#summary");
+    const count = document.querySelector("#count");
+    count.innerText = text.innerHTML.replace(/[^A-Z0-9ãõçâêôáéíóúàü]/ig, " ").trim().split(/\s+/).length;
+};
+const addmember = (Name, Role, CPF) => {
+    Name = (Name)?String(Name):String();
+    Role = (Role)?String(Role):String();
+    CPF = (CPF)?String(CPF):String();
+    const field = document.querySelector("#members");
+    const counter = document.querySelector("#memberscounter");
+    const n = Number(counter.value);
+    counter.value = String(n + 1);
+    field.innerHTML = field.innerHTML + `<p>Nome</p><input type="text" name="member${n}" value="${Name}"/><p>Cargo</p><input type="text" name="memberRole${n}" value="${Role}"/><p>CPF</p><input type="text" name="memberCPF${n}" value="${CPF}"/>`;
+};
+const addpartner = (Name) => {
+    Name = (Name)?String(Name):String();
+    const field = document.querySelector("#partners");
+    const counter = document.querySelector("#partnerscounter");
+    const n = Number(counter.value);
+    counter.value = String(n + 1);
+    field.innerHTML = field.innerHTML + `<p>Nome</p><input type="text" name="partner${n}" value="${Name}"/>`;
+};
+</script>
 </body>
 </html>

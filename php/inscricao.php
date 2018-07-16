@@ -2,6 +2,8 @@
 
 $status = "GET";
 
+$errfirstname = "";
+
 function validate_input($data) {
     $data = trim($data);
     # $data = stripslashes($data);
@@ -9,8 +11,18 @@ function validate_input($data) {
     return $data;
 }
 
+function printVar($name,$value) {
+    return "<p>" . $name . ":" . validate_input($value) . "</p>";
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $status = "POST";
+    $firstname = validate_input($_POST["firstname"]);
+    if(is_string($firstname) and $firstname != "") {
+
+    } else {
+        $errfirstname = "Primeiro nome em branco."
+    }
 }
 
 ?>
@@ -26,22 +38,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 <?php
 echo $status;
+echo printVar('$firstname', $firstname);
 ?>
 <form method="post" action="inscricao.php" enctype="multipart/form-data">
     <h1>Inscrição</h1>
+    <p class="error">* campo obrigatório</p>
     <h2>Dados do responsável</h2>
     <p>Primeiro nome (ex: João):</p>
     <input type="text" name="firstname"/>
-    <p class="error"></p>
+    <p class="error">*<?php echo $errfirstname ; ?></p>
     <p>Segundo nome (ex: Silveira Silva):</p>
     <input type="text" name="secondname"/>
-    <p class="error"></p>
+    <p class="error">*</p>
     <p>RG ou RNE:</p>
     <input type="text" name="rg"/>
-    <p class="error"></p>
+    <p class="error">*</p>
     <p>CPF (somente números):</p>
     <input type="text" name="cpf"/>
-    <p class="error"></p>
+    <p class="error">*</p>
     <h3>Endereço:</h3>
     <p>CEP:</p>
     <input type="text" name="street"/>
@@ -127,13 +141,14 @@ echo $status;
     <h2>Dados do Projeto</h2>
     <p>Categoria do projeto:</p>
     <select name="category">
-        <option value="">Educação Infantil</option>
-        <option value="">Educação Fundamental I</option>
-        <option value="">Educação Fundamental II</option>
-        <option value="">Ensino Médio</option>
-        <option value="">Educação de Jovens e Adultos</option>
-        <option value="">Xadrez</option>
-        <option value="">Hipnoterapia</option>
+        <option value="EI">Educação Infantil</option>
+        <option value="EFI">Educação Fundamental I</option>
+        <option value="EFII">Educação Fundamental II</option>
+        <option value="EM">Ensino Médio</option>
+        <option value="EJA">Educação de Jovens e Adultos</option>
+        <option value="ES">Ensino Superior</option>
+        <option value="XA">Xadrez</option>
+        <option value="HI">Hipnoterapia</option>
     </select>
     <p class="error"></p>
     <p>Tema do projeto:</p>

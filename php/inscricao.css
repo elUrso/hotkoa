@@ -5,3 +5,7 @@
 .ddd {
     width: 2rem;
 }
+
+.error {
+    color: red;
+}

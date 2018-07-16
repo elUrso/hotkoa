@@ -2,7 +2,11 @@
 
 $status = "GET";
 
+$validfirstname = false;
 $errfirstname = "";
+
+$validsecondname = false;
+$errsecondname = "";
 
 function validate_input($data) {
     $data = trim($data);
@@ -19,9 +23,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $status = "POST";
     $firstname = validate_input($_POST["firstname"]);
     if(is_string($firstname) and $firstname != "") {
-
+        $validfirstname = true;
     } else {
-        $errfirstname = "Primeiro nome em branco."
+        $errfirstname = "Primeiro nome em branco.";
+    }
+    $secondname = validate_input($_POST["secondname"]);
+    if(is_string($secondname) and $secondname != "") {
+        $validsecondname = true;
+    } else {
+        $errsecondname = "Segundo nome em branco.";
     }
 }
 
@@ -45,12 +55,12 @@ echo printVar('$firstname', $firstname);
     <p class="error">* campo obrigatório</p>
     <h2>Dados do responsável</h2>
     <p>Primeiro nome (ex: João):</p>
-    <input type="text" name="firstname"/>
-    <p class="error">*<?php echo $errfirstname ; ?></p>
+    <input type="text" name="firstname" value="<?php echo $firstname;?>"/>
+    <p class="error">* <?php echo $errfirstname ; ?></p>
     <p>Segundo nome (ex: Silveira Silva):</p>
-    <input type="text" name="secondname"/>
-    <p class="error">*</p>
-    <p>RG ou RNE:</p>
+    <input type="text" name="secondname" value="<?php echo $secondname;?>"/>
+    <p class="error">* <?php echo $errsecondname ; ?></p>
+    <p>RG ou RNE (ex: 00.000.000-0):</p>
     <input type="text" name="rg"/>
     <p class="error">*</p>
     <p>CPF (somente números):</p>

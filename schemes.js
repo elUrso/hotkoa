@@ -70,3 +70,6 @@ db_con.query(select_users, function (error, results, fields) {
              })
 
 db_con.end();
+
+concurso2018
+rC7Rb8zJtMqUnKH5

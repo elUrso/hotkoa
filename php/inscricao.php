@@ -6,6 +6,8 @@ $pdfsent = false;
 $validpdf = false;
 $errpdf = "";
 
+$nodocument = false;
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" and isset($_FILES["pdfdocument"])) {
     $file = $_FILES["pdfdocument"];
     $pdfsent = true;
@@ -96,6 +98,33 @@ $errrole = "";
 $degree = "";
 $validdegree = false;
 $errdegree = "";
+
+$institution = "";
+$validinstitution = false;
+$errinstitution = "";
+
+$unity = "";
+$validunity = false;
+$errunity = "";
+
+$category = "EI";
+$validcategory = true;
+
+$theme = "";
+$validtheme = false;
+$errtheme = "";
+
+$title = "";
+$validtitle = false;
+$errtitle = "";
+
+$date = "";
+$validdate = false;
+$errdate = "";
+
+$video = "";
+$validvideo = false;
+$errvideo = "";
 
 function validate_input($data) {
     $data = trim($data);
@@ -326,6 +355,80 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $errdegree = "Formação em branco.";
     }
+    if(validate_input($_POST["nodocument"]) == "1") {
+        $nodocument = true;
+    }
+    if(!$validpdf and !$nodocument) {
+        $errpdf = "Nenhum arquivo enviado nem a caixa \"Não preciso enviar comprovante\" marcada.";
+    }
+    $institution = validate_input($_POST["institution"]);
+    if(is_string($institution) and $institution != "") {
+        $validinstitution = true;
+    } else {
+        $errinstitution = "Instituição em branco.";
+    }
+    $unity = validate_input($_POST["unity"]);
+    if(is_string($unity) and $unity != "") {
+        $validunity = true;
+    } else {
+        $errunity = "Unidade em branco.";
+    }
+    $categorycode = validate_input($_POST["category"]);
+    if(is_string($categorycode) and $categorycode != "") {
+        switch ($categorycode) {
+            case "EI":
+                $category = "EI";
+                break;
+            case "EFI":
+                $category = "EFI";
+                break;
+            case "EFII":
+                $category = "EFII";
+                break;
+            case "EM":
+                $category = "EM";
+                break;
+            case "EJA":
+                $category = "EJA";
+                break;
+            case "ES":
+                $category = "ES";
+                break;
+            case "XA"::
+                $category = "XA";
+                break;
+            case "HI":
+                $category = "HI";
+                break;
+            default:
+                $category = "EI";
+        }
+    }
+    $theme = validate_input($_POST["theme"]);
+    if(is_string($theme) and $theme != "") {
+        $validtheme = true;
+    } else {
+        $errtheme = "Tema em branco.";
+    }
+    $title = validate_input($_POST["title"]);
+    if(is_string($title) and $title != "") {
+        $validtitle = true;
+    } else {
+        $errtitle = "Título em branco.";
+    }
+    $date = validate_input($_POST["date"]);
+    if(is_string($date) and $date != "") {
+        $validdate = true;
+    } else {
+        $errdate = "Data inválida.";
+    }
+    $video = validate_input($_POST["video"]);
+    if (is_string($video) and $video != "" and filter_var($video, FILTER_VALIDATE_URL)) {
+        $validvideo = true; 
+    } else {
+        $errvideo = "Link inválido.";
+    }
+
 }
 
 ?>
@@ -433,40 +536,41 @@ echo $status;
     <p>Documento no formato PDF com tamanho máximo de 5MB</p>
     <input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
     <input type="file" name="pdfdocument"/>
-    <p class="error"></p>
+    <input type="checkbox" name="nodocument" value="1" <?php if($nodocument) echo "checked"?>>Não preciso enviar comprovante<br>
+    <p class="error">* <?php echo $errpdf; ?></p>
     <h2>Dados da Instituição</h2>
     <p>Nome da instituição:</p>
-    <input type="text" name="institution"/>
-    <p class="error"></p>
+    <input type="text" name="institution" value="<?php echo $institution;?>"/>
+    <p class="error"><?php echo $errinstitution; ?></p>
     <p>Unidade administrativa:</p>
-    <input type="text" name="unity"/>
-    <p class="error"></p>
+    <input type="text" name="unity" value="<?php echo $unity;?>"/>
+    <p class="error"><?php echo $errunity; ?></p>
     <h2>Dados do Projeto</h2>
     <p>Categoria do projeto:</p>
     <select name="category">
-        <option value="EI">Educação Infantil</option>
-        <option value="EFI">Educação Fundamental I</option>
-        <option value="EFII">Educação Fundamental II</option>
-        <option value="EM">Ensino Médio</option>
-        <option value="EJA">Educação de Jovens e Adultos</option>
-        <option value="ES">Ensino Superior</option>
-        <option value="XA">Xadrez</option>
-        <option value="HI">Hipnoterapia</option>
+        <option value="EI" <?php if($category == "EI") echo "selected"; ?>>Educação Infantil</option>
+        <option value="EFI" <?php if($category == "EFI") echo "selected"; ?>>Educação Fundamental I</option>
+        <option value="EFII" <?php if($category == "EFII") echo "selected"; ?>>Educação Fundamental II</option>
+        <option value="EM" <?php if($category == "EM") echo "selected"; ?>>Ensino Médio</option>
+        <option value="EJA" <?php if($category == "EJA") echo "selected"; ?>>Educação de Jovens e Adultos</option>
+        <option value="ES" <?php if($category == "ES") echo "selected"; ?>>Ensino Superior</option>
+        <option value="XA" <?php if($category == "XA") echo "selected"; ?>>Xadrez</option>
+        <option value="HI" <?php if($category == "HI") echo "selected"; ?>>Hipnoterapia</option>
     </select>
     <p class="error"></p>
     <p>Tema do projeto:</p>
-    <input type="text" name="theme"/>
-    <p class="error"></p>
+    <input type="text" name="theme" value="<?php echo $theme;?>"/>
+    <p class="error">* <?php echo $errtheme; ?></p>
     <p>Título da iniciativa:</p>
-    <input type="text" name="title"/>
-    <p class="error"></p>
+    <input type="text" name="title" value="<?php echo $title;?>"/>
+    <p class="error">* <?php echo $errtitle; ?></p>
     <p>Data da implatação:</p>
     <span class="observation">A iniciativa deve ter no máximo 1 (um) ano de implantação, estar em implantação.</span><br/>
-    <input type="date" name="date"/>
-    <p class="error"></p>
-    <p>Link do video ou reportagem sobre o projeto:</p>
-    <input type="text" name="video"/>
-    <p class="error"></p>
+    <input type="date" name="date" value="<?php echo $date;?>"/>
+    <p class="error">* <?php echo $errdate?></p>
+    <p>Link do video ou reportagem sobre o projeto (ex: http://www.example.com/):</p>
+    <input type="text" name="video" value="<?php echo $video;?>"/>
+    <p class="error">* <?php echo $errvideo?></p>
     <h3>Resumo da Iniciativa:</h3>
     <span class="observation">Resumo da iniciativa com no máximo 250 palavras em parágrafo único e citando a criatividade e inovação visadas pela iniciativa.</span><br/>
     <textarea id="summary" type="text" name="summary" rows="25" cols="60" onkeyup="wordcount();"></textarea><br/>

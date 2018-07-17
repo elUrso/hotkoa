@@ -2,11 +2,29 @@
 
 $status = "GET";
 
+$firstname = "";
 $validfirstname = false;
 $errfirstname = "";
 
+$secondname = "";
 $validsecondname = false;
 $errsecondname = "";
+
+$rg = "";
+$validrg = false;
+$errrg = "";
+
+$cpf = "";
+$validcpf = false;
+$errcpf = "";
+
+$cep = "";
+$validcep = false;
+$errcep = "";
+
+$street = "";
+$validstreet = false;
+$errstreet = "";
 
 function validate_input($data) {
     $data = trim($data);
@@ -17,6 +35,35 @@ function validate_input($data) {
 
 function printVar($name,$value) {
     return "<p>" . $name . ":" . validate_input($value) . "</p>";
+}
+
+function verifycpf($cpf) {
+    if(strlen($cpf) == 11 and
+    $cpf != '00000000000' and
+    $cpf != '11111111111' and
+    $cpf != '22222222222' and
+    $cpf != '33333333333' and
+    $cpf != '44444444444' and
+    $cpf != '55555555555' and
+    $cpf != '66666666666' and
+    $cpf != '77777777777' and
+    $cpf != '88888888888' and
+    $cpf != '99999999999') {
+        $d1 = 0;
+        for ($i=8; $i >= 0; $i--) {
+            $d1 += $cpf{$i} * ($i + 1);
+        }
+        $d1 = ($d1 % 11) % 10;
+        $d2 = 0;
+        for ($i=8; $i >= 0; $i--) {
+            $d2 += $cpf{$i} * ($i);
+        }
+        $d2 = (($d2 + ($d1 * 9)) % 11) % 10;
+        if ($cpf{9} == $d1 and $cpf{10} == $d2) {
+            return true;
+        }
+    }
+    return false;
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -33,6 +80,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $errsecondname = "Segundo nome em branco.";
     }
+    $rg = validate_input($_POST["rg"]);
+    if(is_string($rg) and $rg != "") {
+        $validrg = true;
+    } else {
+        $errrg = "RG inválido.";
+    }
+    $cpf = validate_input($_POST["cpf"]);
+    if(is_string($cpf) and $cpf != "" and !(preg_match("/[^0123456789]/", $cpf)) and verifycpf($cpf)) {
+        $validcpf = true;
+    } else {
+        $errcpf = "CPF inválido.";
+    }
+    $cep = validate_input($_POST["cep"]);
+    if(is_string($cep) and $cep != "" and !(preg_match("/[^0123456789]/", $cep)) and strlen($cep) == 8) {
+        $validcep = true;
+    } else {
+        $errcep = "CEP inválido.";
+    }
+    $street = validate_input($_POST["street"]);
+    if(is_string($street) and $street != "") {
+        $validstreet = true;
+    } else {
+        $errstreet = "Logradouro em branco.";
+    }
 }
 
 ?>
@@ -48,7 +119,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 <?php
 echo $status;
-echo printVar('$firstname', $firstname);
 ?>
 <form method="post" action="inscricao.php" enctype="multipart/form-data">
     <h1>Inscrição</h1>
@@ -56,23 +126,23 @@ echo printVar('$firstname', $firstname);
     <h2>Dados do responsável</h2>
     <p>Primeiro nome (ex: João):</p>
     <input type="text" name="firstname" value="<?php echo $firstname;?>"/>
-    <p class="error">* <?php echo $errfirstname ; ?></p>
+    <p class="error">* <?php echo $errfirstname; ?></p>
     <p>Segundo nome (ex: Silveira Silva):</p>
     <input type="text" name="secondname" value="<?php echo $secondname;?>"/>
-    <p class="error">* <?php echo $errsecondname ; ?></p>
+    <p class="error">* <?php echo $errsecondname; ?></p>
     <p>RG ou RNE (ex: 00.000.000-0):</p>
-    <input type="text" name="rg"/>
-    <p class="error">*</p>
+    <input type="text" name="rg" value="<?php echo $rg?>"/>
+    <p class="error">* <?php echo $errrg; ?></p>
     <p>CPF (somente números):</p>
-    <input type="text" name="cpf"/>
-    <p class="error">*</p>
+    <input type="text" name="cpf" value="<?php echo $cpf?>"/>
+    <p class="error">* <?php echo $errcpf; ?></p>
     <h3>Endereço:</h3>
-    <p>CEP:</p>
-    <input type="text" name="street"/>
-    <p class="error"></p>
-    <p>Rua:</p>
-    <input type="text" name="street"/>
-    <p class="error"></p>
+    <p>CEP (somente números):</p>
+    <input type="text" name="cep" value="<?php echo $cep?>"/>
+    <p class="error">* <?php echo $errcep; ?></p>
+    <p>Logradouro:</p>
+    <input type="text" name="street" value="<?php echo $street?>"/>
+    <p class="error">* <?php echo $errstreet; ?></p>
     <p>Número:</p>
     <input type="text" name="number"/>
     <p class="error"></p>

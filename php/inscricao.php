@@ -26,6 +26,14 @@ $street = "";
 $validstreet = false;
 $errstreet = "";
 
+$area = "";
+$validarea = false;
+$errarea = "";
+
+$city = "";
+$validcity = false;
+$errcity = "";
+
 function validate_input($data) {
     $data = trim($data);
     # $data = stripslashes($data);
@@ -104,6 +112,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $errstreet = "Logradouro em branco.";
     }
+    $area = validate_input($_POST["area"]);
+    if(is_string($area) and $area != "") {
+        $validarea = true;
+    } else {
+        $errarea = "Bairro em branco.";
+    }
+    $city = validate_input($_POST["city"]);
+    if(is_string($city) and $city != "") {
+        $validcity = true;
+    } else {
+        $errcity = "Cidade em branco.";
+    }
 }
 
 ?>
@@ -150,11 +170,11 @@ echo $status;
     <input type="text" name="street2"/>
     <p class="error"></p>
     <p>Bairro:</p>
-    <input type="text" name="area"/>
-    <p class="error"></p>
+    <input type="text" name="area" value="<?php echo $area?>"/>
+    <p class="error">* <?php echo $errarea; ?></p>
     <p>Cidade:</p>
-    <input type="text" name="city"/>
-    <p class="error"></p>
+    <input type="text" name="city" value="<?php echo $city?>"/>
+    <p class="error">* <?php echo $errcity; ?></p>
     <p>Estado:</p>
     <select name="state">
         <option value="AC">AC</option>

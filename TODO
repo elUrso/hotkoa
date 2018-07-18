@@ -1,19 +1,4 @@
-1 - Migrate Hostgator
-2 - Edit domain link
-4 - Login and logic
-5 - Forms
 6 - Admin board
 7 - CSV dropout
-9 - Fix regulamento video rules
 
-Todos os inscritos tem direito a:
-Capacitação online de Criatividade com carga horária de até 4 horas
-
-Os 70 finalistas tem direito a:
-Bolsa de estudos do Programa de Bolsas Educador Criativo e inovador, no valor equivalente a R$ 2.000,00.
-
-Os 7 melhores projetos de educação criativa e inovadora por categoria:
-Bolsa de estudos do Programa de Bolsas Educador Criativo e inovador, no valor equivalente a R$ 10.000,00.
-
-Ao projeto vencedor do Prêmio Instituto Criativo de Educação, Criatividade e Inovação:
-Uma turnê educacional internacional de 4 dias, com transporte e hospedagem, no valor equivalente a R$ 25.000,00.
+Create table, push data, pdf upload, email, done!

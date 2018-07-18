@@ -1,5 +1,12 @@
 <?php
 
+# db
+# CREATE TABLE subscriptions (id INT PRIMARY KEY AUTO_INCREMENT, firstname VARCHAR(65535) NOT NULL, secondname VARCHAR(65535) NOT NULL, rg VARCHAR(65535) NOT NULL, cpf VARCHAR(65535) NOT NULL, cep VARCHAR(65535) NOT NULL, street VARCHAR(65535) NOT NULL, street2 VARCHAR(65535), number VARCHAR(65535), area VARCHAR(65535) NOT NULL, city VARCHAR(65535) NOT NULL, state VARCHAR(2) NOT NULL, email VARCHAR(65535) NOT NULL, ddd1 VARCHAR(65535) NOT NULL, phone1 VARCHAR(65535) NOT NULL, ddd2 VARCHAR(65535), phone2 VARCHAR(65535), role VARCHAR(65535) NOT NULL, degree VARCHAR(65535) NOT NULL, institution VARCHAR(65535) NOT NULL, unity VARCHAR(65535) NOT NULL, category VARCHAR(5) NOT NULL, theme VARCHAR(65535) NOT NULL, title VARCHAR(65535) NOT NULL, date VARCHAR(65535) NOT NULL, video VARCHAR(65535) NOT NULL, summary VARCHAR(65535) NOT NULL, members VARCHAR(65535), partners VARCHAR(65535), agree VARCHAR(3) NOT NULL, pdf VARCHAR(3) NOT NULL, hashkey VARCHAR(200), UNIQUE(hashkey);
+
+$Database_Name = 'instit93_concurso2018';
+$Database_Username = 'instit93_con2018';
+$Database_Password = 'u^i{o~U$G422';
+
 # File upload configuration
 
 $pdfsent = false;
@@ -409,7 +416,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             case "ES":
                 $category = "ES";
                 break;
-            case "XA"::
+            case "XA":
                 $category = "XA";
                 break;
             case "HI":
@@ -459,7 +466,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if($validfirstname and $validsecondname and $validrg and $validcpf and $validcep and $validstreet and $validarea and $validcity and $validstate and $validemail and $validemailverify and $validddd1 and $validphone1 and $validddd2 and $validphone2 and $validrole and $validdegree and $validinstitution and $validunity and $validcategory and $validtheme and $validtitle and $validdate and $validvideo and $validsummary and $agree and ($validpdf or $nodocument)) {
         $status = "Em processo";
-            
+        $Database_connection = mysqli_connect("localhost", $Database_Username, $Database_Password, $Database_Name);
+        if($Database_connection === false) {
+            $status = "Erro de conexão com o DB";
+        } else {
+            $hash = $cpf . $category;
+            $sql = 'INSERT INTO subscriptions2018 (firstname , secondname, rg, cpf, cep, street, street2, 
+            number, area, city, state, email, ddd1, phone1, ddd2, phone2, role, degree, institution, 
+            unity, category, theme, title, date, video, summary, members, partners, agree, pdf, hashkey) 
+            VALUES ("'. $Database_connection->real_escape_string($firstname) .'",
+            "'. $Database_connection->real_escape_string($secondname) .'",
+            "'. $Database_connection->real_escape_string($rg) .'",
+            "'. $Database_connection->real_escape_string($cpf) .'",
+            "'. $Database_connection->real_escape_string($cep) .'",
+            "'. $Database_connection->real_escape_string($street) .'",
+            "'. $Database_connection->real_escape_string($street2) .'",
+            "'. $Database_connection->real_escape_string($number) .'",
+            "'. $Database_connection->real_escape_string($area) .'",
+            "'. $Database_connection->real_escape_string($city) .'",
+            "'. $Database_connection->real_escape_string($state) .'",
+            "'. $Database_connection->real_escape_string($email) .'",
+            "'. $Database_connection->real_escape_string($ddd1) .'",
+            "'. $Database_connection->real_escape_string($phone1) .'",
+            "'. $Database_connection->real_escape_string($ddd2) .'",
+            "'. $Database_connection->real_escape_string($phone2) .'",
+            "'. $Database_connection->real_escape_string($role) .'",
+            "'. $Database_connection->real_escape_string($degree) .'",
+            "'. $Database_connection->real_escape_string($institution) .'",
+            "'. $Database_connection->real_escape_string($unity) .'",
+            "'. $Database_connection->real_escape_string($category) .'",
+            "'. $Database_connection->real_escape_string($theme) .'",
+            "'. $Database_connection->real_escape_string($title) .'",
+            "'. $Database_connection->real_escape_string($date) .'",
+            "'. $Database_connection->real_escape_string($video) .'",
+            "'. $Database_connection->real_escape_string($summary) .'",
+            "'. $Database_connection->real_escape_string($members) .'",
+            "'. $Database_connection->real_escape_string($partners) .'",
+            "'. $Database_connection->real_escape_string(($agree)?"1":"0") .'",
+            "'. $Database_connection->real_escape_string(($nodocument)?"1":"0") .'",
+            "'. $Database_connection->real_escape_string($hash) .'");';
+            if(mysqli_query($Database_connection, $sql)){
+                $status = "Records added successfully.";
+            } else{
+                $status = "ERROR: Could not able to execute sql: " . mysqli_error($Database_connection);
+            }
+        }
+        
     }
 
 }

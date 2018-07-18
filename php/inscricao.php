@@ -126,6 +126,21 @@ $video = "";
 $validvideo = false;
 $errvideo = "";
 
+$summary = "";
+$validsummary = false;
+$errsummary = "";
+
+$members = "";
+$validmembers = false;
+$errmembers = "";
+
+$partners = "";
+$validpartners = false;
+$errpartners = "";
+
+$agree = false;
+$erragree = "";
+
 function validate_input($data) {
     $data = trim($data);
     # $data = stripslashes($data);
@@ -428,6 +443,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $errvideo = "Link inválido.";
     }
+    $summary = validate_input($_POST["summary"]);
+    if (is_string($summary) and $summary != "" and count(preg_split('/\s+/i', trim(preg_replace('/[^A-Z0-9ãõçâêôáéíóúàü\-]/i', " ", $summary)))) < 250) {
+        $validsummary = true; 
+    } else {
+        $errsummary = "Resumo contém palavras demais ou é inválido.";
+    }
+    if (isset($_POST["agree"]) and $_POST["agree"] == "1") {
+        $agree = true;
+    } else {
+        $erragree = "Caixa de ciência dos termos não foi marcada.";
+    }
+    $partners = validate_input($_POST["partners"]);
+    $members = validate_input($_POST["members"]);
+    
+    if($validfirstname and $validsecondname and $validrg and $validcpf and $validcep and $validstreet and $validarea and $validcity and $validstate and $validemail and $validemailverify and $validddd1 and $validphone1 and $validddd2 and $validphone2 and $validrole and $validdegree and $validinstitution and $validunity and $validcategory and $validtheme and $validtitle and $validdate and $validvideo and $validsummary and $agree and ($validpdf or $nodocument)) {
+        $status = "Em processo";
+            
+    }
 
 }
 
@@ -573,22 +606,16 @@ echo $status;
     <p class="error">* <?php echo $errvideo?></p>
     <h3>Resumo da Iniciativa:</h3>
     <span class="observation">Resumo da iniciativa com no máximo 250 palavras em parágrafo único e citando a criatividade e inovação visadas pela iniciativa.</span><br/>
-    <textarea id="summary" type="text" name="summary" rows="25" cols="60" onkeyup="wordcount();"></textarea><br/>
-    <span id="count"></span>
-    <p class="error"></p>
-    <p>Integrantes da equipe de desenvolvimento da iniciativa (caso haja)</p>
-    <input type="hidden" name="memberscounter" id="memberscounter" value="1"/>
-    <div class="members" id="members">
-    </div>
-    <button type="button" onclick="addmember();">Adicionar integrante</button>
+    <textarea id="summary" type="text" name="summary" onkeyup="wordcount();" ><?php echo $summary;?></textarea>
+    <p>Número de palavras: <span id="count"></span></p>
+    <p class="error">* <?php echo $errsummary?></p>
+    <p>Integrantes da equipe de desenvolvimento da iniciativa (caso haja, constar nome, CPF e cargo)</p>
+    <textarea class="members" name="members"><?php echo $members;?></textarea>
     <p>Parceiros da iniciativa (caso haja)</p>
     <span class="observation">Órgãos, instituições e/ou entidades parceiras no desenvolvimento da iniciativa.</span><br/>
-    <input type="hidden" name="partnerscounter" id="partnerscounter" value="1"/>
-    <div class="partners" id="partners">
-    </div>
-    <button type="button" onclick="addpartner();">Adicionar parceiro</button>
-    <p>Ao marcar a caixa a seguir, afirmo que li a Portaria que dispõe sobre o Concurso Cultural Prêmio Instituto Criativo de Educação, Criatividade e Inovação, a que estabelece procedimentos para as inscrições e apresentação dos trabalhos no Concurso Cultural Prêmio de Educação, Criatividade e Inovação – 2018 e todas as instruções para o preenchimento da Ficha de Inscrição e do Relato da Iniciativa. Estou ciente das regras estabelecidas e sou inteiramente responsável pelas informações prestadas.
-    <input type="checkbox" name="agree" value="1"/></p>
+    <textarea class="partners" name="partners"><?php echo $partners;?></textarea>
+    <p><input type="checkbox" name="agree" value="1" <?php if ($agree) echo "checked";?>/> Afirmo que li o regulamento que dispõe sobre o Concurso Cultural Prêmio Instituto Criativo de Educação, Criatividade e Inovação, a que estabelece procedimentos para as inscrições e apresentação dos trabalhos no Concurso Cultural Prêmio de Educação, Criatividade e Inovação – 2018 e todas as instruções para o preenchimento da Ficha de Inscrição e do Relato da Iniciativa. Estou ciente das regras estabelecidas e sou inteiramente responsável pelas informações prestadas.</p>
+    <p class="error"><?php echo $erragree; ?></p>
     <input type="submit" value="Finalizar inscrição"/>
 </form>
 <script>
@@ -597,24 +624,8 @@ const wordcount = () => {
     const count = document.querySelector("#count");
     count.innerText = text.value.replace(/[^A-Z0-9ãõçâêôáéíóúàü\-]/ig, " ").trim().split(/\s+/).length;
 };
-const addmember = (Name, Role, CPF) => {
-    Name = (Name)?String(Name):String();
-    Role = (Role)?String(Role):String();
-    CPF = (CPF)?String(CPF):String();
-    const field = document.querySelector("#members");
-    const counter = document.querySelector("#memberscounter");
-    const n = Number(counter.value);
-    counter.value = String(n + 1);
-    field.innerHTML = field.innerHTML + `<p>Nome</p><input type="text" name="member${n}" value="${Name}"/><p>Cargo</p><input type="text" name="memberRole${n}" value="${Role}"/><p>CPF</p><input type="text" name="memberCPF${n}" value="${CPF}"/>`;
-};
-const addpartner = (Name) => {
-    Name = (Name)?String(Name):String();
-    const field = document.querySelector("#partners");
-    const counter = document.querySelector("#partnerscounter");
-    const n = Number(counter.value);
-    counter.value = String(n + 1);
-    field.innerHTML = field.innerHTML + `<p>Nome</p><input type="text" name="partner${n}" value="${Name}"/>`;
-};
+
+wordcount();
 </script>
 </body>
 </html>

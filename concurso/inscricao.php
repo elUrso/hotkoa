@@ -1,7 +1,7 @@
 <?php
 
 # db
-# CREATE TABLE subscriptions2018 (id INT PRIMARY KEY AUTO_INCREMENT, firstname VARCHAR(65535) NOT NULL, secondname VARCHAR(65535) NOT NULL, rg VARCHAR(65535) NOT NULL, cpf VARCHAR(65535) NOT NULL, cep VARCHAR(65535) NOT NULL, street VARCHAR(65535) NOT NULL, street2 VARCHAR(65535), number VARCHAR(65535), area VARCHAR(65535) NOT NULL, city VARCHAR(65535) NOT NULL, state VARCHAR(2) NOT NULL, email VARCHAR(65535) NOT NULL, ddd1 VARCHAR(65535) NOT NULL, phone1 VARCHAR(65535) NOT NULL, ddd2 VARCHAR(65535), phone2 VARCHAR(65535), role VARCHAR(65535) NOT NULL, degree VARCHAR(65535) NOT NULL, institution VARCHAR(65535) NOT NULL, unity VARCHAR(65535) NOT NULL, category VARCHAR(5) NOT NULL, theme VARCHAR(65535) NOT NULL, title VARCHAR(65535) NOT NULL, date VARCHAR(65535) NOT NULL, video VARCHAR(65535) NOT NULL, summary VARCHAR(65535) NOT NULL, members VARCHAR(65535), partners VARCHAR(65535), agree VARCHAR(3) NOT NULL, pdf VARCHAR(3) NOT NULL, hashkey VARCHAR(200), UNIQUE(hashkey));
+# CREATE TABLE subscriptions2018 (id INT PRIMARY KEY AUTO_INCREMENT, firstname VARCHAR(65535) NOT NULL, secondname VARCHAR(65535) NOT NULL, rg VARCHAR(65535) NOT NULL, cpf VARCHAR(65535) NOT NULL, cep VARCHAR(65535) NOT NULL, street VARCHAR(65535) NOT NULL, street2 VARCHAR(65535), number VARCHAR(65535), area VARCHAR(65535) NOT NULL, city VARCHAR(65535) NOT NULL, state VARCHAR(2) NOT NULL, email VARCHAR(65535) NOT NULL, ddd1 VARCHAR(65535) NOT NULL, phone1 VARCHAR(65535) NOT NULL, ddd2 VARCHAR(65535), phone2 VARCHAR(65535), role VARCHAR(65535) NOT NULL, degree VARCHAR(65535) NOT NULL, institution VARCHAR(65535) NOT NULL, unity VARCHAR(65535) NOT NULL, category VARCHAR(5) NOT NULL, theme VARCHAR(65535) NOT NULL, title VARCHAR(65535) NOT NULL, date VARCHAR(65535) NOT NULL, video VARCHAR(65535) NOT NULL, summary VARCHAR(65535) NOT NULL, members VARCHAR(65535), partners VARCHAR(65535), agree VARCHAR(3) NOT NULL, pdf VARCHAR(3) NOT NULL, hashkey VARCHAR(200), status VARCHAR(65535) NOT NULL, UNIQUE(hashkey));
 
 $Database_Name = 'instit93_concurso2018';
 $Database_Username = 'instit93_con2018';
@@ -524,7 +524,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $hash = $cpf . $category;
             $sql = 'INSERT INTO subscriptions2018 (firstname , secondname, rg, cpf, cep, street, street2, 
             number, area, city, state, email, ddd1, phone1, ddd2, phone2, role, degree, institution, 
-            unity, category, theme, title, date, video, summary, members, partners, agree, pdf, hashkey) 
+            unity, category, theme, title, date, video, summary, members, partners, agree, pdf, hashkey, status) 
             VALUES ("'. $Database_connection->real_escape_string($firstname) .'",
             "'. $Database_connection->real_escape_string($secondname) .'",
             "'. $Database_connection->real_escape_string($rg) .'",
@@ -555,7 +555,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "'. $Database_connection->real_escape_string($partners) .'",
             "'. $Database_connection->real_escape_string(($agree)?"1":"0") .'",
             "'. $Database_connection->real_escape_string(($nodocument)?"1":"0") .'",
-            "'. $Database_connection->real_escape_string($hash) .'");';
+            "'. $Database_connection->real_escape_string($hash) .'", "Enviado");';
             if(mysqli_query($Database_connection, $sql)){
                 $status = "Sua inscrição foi incluida em nosso sistema, mas não foi possível concluir-la,  por favor, contate concurso2018@institutocriativo.org.br com o assunto 'Inscrição não conluída' relatando o ocorrido.";
                 $subscriptionquery = mysqli_query($Database_connection, 'SELECT id FROM subscriptions2018 WHERE hashkey LIKE "' . $hash . '";');
@@ -583,37 +583,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" type="text/css" media="screen" href="inscricao.css"/>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <link rel="stylesheet" type="text/css" href="inscricao.css"/>
     <title>Inscrição</title>
 </head>
 <body>
 <form method="post" action="inscricao.php" enctype="multipart/form-data">
     <h1>Inscrição</h1>
     <h3><?php echo htmlspecialchars($status);?></h3>
-    <p class="error">* = campo obrigatório</p>
+    <p class="error">! = campo obrigatório</p>
     <h2>Dados do responsável</h2>
     <p>Primeiro nome (ex: João):</p>
     <input type="text" name="firstname" value="<?php echo $firstname;?>"/>
-    <p class="error">* <?php echo $errfirstname; ?></p>
+    <p class="error">! <?php echo $errfirstname; ?></p>
     <p>Segundo nome (ex: Silveira Silva):</p>
     <input type="text" name="secondname" value="<?php echo $secondname;?>"/>
-    <p class="error">* <?php echo $errsecondname; ?></p>
+    <p class="error">! <?php echo $errsecondname; ?></p>
     <p>RG ou RNE (ex: 00.000.000-0):</p>
     <input type="text" name="rg" value="<?php echo $rg?>"/>
-    <p class="error">* <?php echo $errrg; ?></p>
+    <p class="error">! <?php echo $errrg; ?></p>
     <p>CPF (somente números):</p>
     <input type="text" name="cpf" value="<?php echo $cpf?>"/>
-    <p class="error">* <?php echo $errcpf; ?></p>
+    <p class="error">! <?php echo $errcpf; ?></p>
     <h3>Endereço:</h3>
     <p>CEP (somente números):</p>
     <input type="text" name="cep" value="<?php echo $cep?>"/>
-    <p class="error">* <?php echo $errcep; ?></p>
+    <p class="error">! <?php echo $errcep; ?></p>
     <p>Logradouro:</p>
     <input type="text" name="street" value="<?php echo $street?>"/>
-    <p class="error">* <?php echo $errstreet; ?></p>
+    <p class="error">! <?php echo $errstreet; ?></p>
     <p>Número:</p>
     <input type="text" name="number" value="<?php echo $number?>"/>
     <p class="error"></p>
@@ -622,10 +622,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p class="error"></p>
     <p>Bairro:</p>
     <input type="text" name="area" value="<?php echo $area?>"/>
-    <p class="error">* <?php echo $errarea; ?></p>
+    <p class="error">! <?php echo $errarea; ?></p>
     <p>Cidade:</p>
     <input type="text" name="city" value="<?php echo $city?>"/>
-    <p class="error">* <?php echo $errcity; ?></p>
+    <p class="error">! <?php echo $errcity; ?></p>
     <p>Estado:</p>
     <select name="state">
         <option value="AC" <?php if($state == "AC") echo "selected"; ?>>AC</option>
@@ -656,41 +656,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <option value="SE" <?php if($state == "SE") echo "selected"; ?>>SE</option>
         <option value="TO" <?php if($state == "TO") echo "selected"; ?>>TO</option>
     </select>
-    <p class="error">*</p>
+    <p class="error">!</p>
     <h3>Contato:</h3>
     <p>E-mail:</p>
     <input type="text" name="email" value="<?php echo $email;?>"/>
-    <p class="error">* <?php echo $erremail;?></p>
+    <p class="error">! <?php echo $erremail;?></p>
     <p>Repetir e-mail:</p>
     <input type="text" name="emailverify"  value="<?php echo $emailverify;?>"/>
-    <p class="error">* <?php echo $erremailverify;?></p>
+    <p class="error">! <?php echo $erremailverify;?></p>
     <p>Telefone principal (Apenas números):</p>
     (0<input type="text" class="ddd" name="ddd1" value="<?php echo $ddd1;?>"/>)
-    <input type="text" name="phone1"  value="<?php echo $phone1;?>"/>
-    <p class="error">* <?php echo $errddd1 . $errphone1;?></p>
+    <input type="text" class="phone" name="phone1"  value="<?php echo $phone1;?>"/>
+    <p class="error">! <?php echo $errddd1 . $errphone1;?></p>
     <p>Telefone secundário  (Apenas números):</p>
     (0<input type="text" class="ddd" name="ddd2" value="<?php echo $ddd2;?>"/>)
-    <input type="text" name="phone2" value="<?php echo $phone2;?>"/>
+    <input type="text" class="phone" name="phone2" value="<?php echo $phone2;?>"/>
     <p class="error"><?php echo $errddd2 . $errphone2;?></p>
     <p>Cargo:</p>
     <input type="text" name="role" value="<?php echo $role;?>"/>
-    <p class="error">* <?php echo $errrole;?></p>
+    <p class="error">! <?php echo $errrole;?></p>
     <p>Formação Acadêmica:</p>
     <input type="text" name="degree" value="<?php echo $degree;?>"/>
-    <p class="error">* <?php echo $errdegree;?></p>
+    <p class="error">! <?php echo $errdegree;?></p>
     <h3>Comprovante de Docência</h3>
     <p>Documento no formato PDF com tamanho máximo de 5MB</p>
     <input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
     <input type="file" name="pdfdocument"/>
-    <input type="checkbox" name="nodocument" value="1" <?php if($nodocument) echo "checked"?>>Não preciso enviar comprovante<br>
-    <p class="error">* <?php echo $errpdf; ?></p>
+    <p><input type="checkbox" name="nodocument" value="1" <?php if($nodocument) echo "checked"?>>Não preciso enviar comprovante<p>
+    <p class="error">! <?php echo $errpdf; ?></p>
     <h2>Dados da Instituição</h2>
     <p>Nome da instituição:</p>
     <input type="text" name="institution" value="<?php echo $institution;?>"/>
-    <p class="error">* <?php echo $errinstitution; ?></p>
+    <p class="error">! <?php echo $errinstitution; ?></p>
     <p>Unidade administrativa:</p>
     <input type="text" name="unity" value="<?php echo $unity;?>"/>
-    <p class="error">* <?php echo $errunity; ?></p>
+    <p class="error">! <?php echo $errunity; ?></p>
     <h2>Dados do Projeto</h2>
     <p>Categoria do projeto:</p>
     <select name="category">
@@ -706,22 +706,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p class="error"></p>
     <p>Tema do projeto:</p>
     <input type="text" name="theme" value="<?php echo $theme;?>"/>
-    <p class="error">* <?php echo $errtheme; ?></p>
+    <p class="error">! <?php echo $errtheme; ?></p>
     <p>Título da iniciativa:</p>
     <input type="text" name="title" value="<?php echo $title;?>"/>
-    <p class="error">* <?php echo $errtitle; ?></p>
+    <p class="error">! <?php echo $errtitle; ?></p>
     <p>Data da implatação:</p>
     <span class="observation">A iniciativa deve ter no máximo 1 (um) ano de implantação, estar em implantação.</span><br/>
     <input type="date" name="date" value="<?php echo $date;?>"/>
-    <p class="error">* <?php echo $errdate?></p>
+    <p class="error">! <?php echo $errdate?></p>
     <p>Link do video ou reportagem sobre o projeto (ex: http://www.example.com/):</p>
     <input type="text" name="video" value="<?php echo $video;?>"/>
-    <p class="error">* <?php echo $errvideo?></p>
+    <p class="error">! <?php echo $errvideo?></p>
     <h3>Resumo da Iniciativa:</h3>
     <span class="observation">Resumo da iniciativa com no máximo 250 palavras em parágrafo único e citando a criatividade e inovação visadas pela iniciativa.</span><br/>
     <textarea id="summary" type="text" name="summary" onkeyup="wordcount();" ><?php echo $summary;?></textarea>
     <p>Número de palavras: <span id="count"></span></p>
-    <p class="error">* <?php echo $errsummary?></p>
+    <p class="error">! <?php echo $errsummary?></p>
     <p>Integrantes da equipe de desenvolvimento da iniciativa (caso haja, constar nome, CPF e cargo)</p>
     <textarea class="members" name="members"><?php echo $members;?></textarea>
     <p>Parceiros da iniciativa (caso haja)</p>
@@ -729,8 +729,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <textarea class="partners" name="partners"><?php echo $partners;?></textarea>
     <p><input type="checkbox" name="agree" value="1" <?php if ($agree) echo "checked";?>/> Afirmo que li o regulamento que dispõe sobre o Concurso Cultural Prêmio Instituto Criativo de Educação, Criatividade e Inovação, a que estabelece procedimentos para as inscrições e apresentação dos trabalhos no Concurso Cultural Prêmio de Educação, Criatividade e Inovação – 2018 e todas as instruções para o preenchimento da Ficha de Inscrição e do Relato da Iniciativa. Estou ciente das regras estabelecidas e sou inteiramente responsável pelas informações prestadas.</p>
     <p class="error"><?php echo $erragree; ?></p>
-    <input type="submit" value="Finalizar inscrição"/>
+    <input type="submit" class="submit" value="Finalizar inscrição"/>
+    <br/>
+    <br/>
 </form>
+<div id="header">
+    <a href="index.html"><div class="anchor-button">Início</div></a>
+</div>
 <script>
 const wordcount = () => {
     const text = document.querySelector("#summary");

@@ -1,7 +1,7 @@
 <?php
 
 # db
-# CREATE TABLE subscriptions (id INT PRIMARY KEY AUTO_INCREMENT, firstname VARCHAR(65535) NOT NULL, secondname VARCHAR(65535) NOT NULL, rg VARCHAR(65535) NOT NULL, cpf VARCHAR(65535) NOT NULL, cep VARCHAR(65535) NOT NULL, street VARCHAR(65535) NOT NULL, street2 VARCHAR(65535), number VARCHAR(65535), area VARCHAR(65535) NOT NULL, city VARCHAR(65535) NOT NULL, state VARCHAR(2) NOT NULL, email VARCHAR(65535) NOT NULL, ddd1 VARCHAR(65535) NOT NULL, phone1 VARCHAR(65535) NOT NULL, ddd2 VARCHAR(65535), phone2 VARCHAR(65535), role VARCHAR(65535) NOT NULL, degree VARCHAR(65535) NOT NULL, institution VARCHAR(65535) NOT NULL, unity VARCHAR(65535) NOT NULL, category VARCHAR(5) NOT NULL, theme VARCHAR(65535) NOT NULL, title VARCHAR(65535) NOT NULL, date VARCHAR(65535) NOT NULL, video VARCHAR(65535) NOT NULL, summary VARCHAR(65535) NOT NULL, members VARCHAR(65535), partners VARCHAR(65535), agree VARCHAR(3) NOT NULL, pdf VARCHAR(3) NOT NULL, hashkey VARCHAR(200), UNIQUE(hashkey);
+# CREATE TABLE subscriptions2018 (id INT PRIMARY KEY AUTO_INCREMENT, firstname VARCHAR(65535) NOT NULL, secondname VARCHAR(65535) NOT NULL, rg VARCHAR(65535) NOT NULL, cpf VARCHAR(65535) NOT NULL, cep VARCHAR(65535) NOT NULL, street VARCHAR(65535) NOT NULL, street2 VARCHAR(65535), number VARCHAR(65535), area VARCHAR(65535) NOT NULL, city VARCHAR(65535) NOT NULL, state VARCHAR(2) NOT NULL, email VARCHAR(65535) NOT NULL, ddd1 VARCHAR(65535) NOT NULL, phone1 VARCHAR(65535) NOT NULL, ddd2 VARCHAR(65535), phone2 VARCHAR(65535), role VARCHAR(65535) NOT NULL, degree VARCHAR(65535) NOT NULL, institution VARCHAR(65535) NOT NULL, unity VARCHAR(65535) NOT NULL, category VARCHAR(5) NOT NULL, theme VARCHAR(65535) NOT NULL, title VARCHAR(65535) NOT NULL, date VARCHAR(65535) NOT NULL, video VARCHAR(65535) NOT NULL, summary VARCHAR(65535) NOT NULL, members VARCHAR(65535), partners VARCHAR(65535), agree VARCHAR(3) NOT NULL, pdf VARCHAR(3) NOT NULL, hashkey VARCHAR(200), UNIQUE(hashkey));
 
 $Database_Name = 'instit93_concurso2018';
 $Database_Username = 'instit93_con2018';
@@ -15,24 +15,9 @@ $errpdf = "";
 
 $nodocument = false;
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" and isset($_FILES["pdfdocument"])) {
-    $file = $_FILES["pdfdocument"];
-    $pdfsent = true;
-    $pdf_path = "pdf/";
-    $pdf_name = "test.pdf";
-    $extension = pathinfo(strtolower(basename($file['name'])), PATHINFO_EXTENSION);
-    $validpdfname = true;
-    if (file_exists($pdf_path . $pdf_name)) $validpdfname = false;
-    $validpdfsize = false;
-    if ($file["size"] < 5000000) $validpdfsize = true;
-    $validpdfextension = false;
-    if ($extension == "pdf") $validpdfextension = true;
-    if ($validpdfname and $validpdfextension and $validpdfsize) $validpdf = true;
-}
-
 # Validation Variables
 
-$status = "GET";
+$status = "Preencha o formulário para se inscrever.";
 
 $firstname = "";
 $validfirstname = false;
@@ -188,8 +173,48 @@ function verifycpf($cpf) {
     return false;
 }
 
+function sendMail($email, $hash) {
+    $to=$email;
+    $subject='Concurso Instituto Criativo';
+    $content='<!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Premio de educação criativa e inovadora</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+    </head>
+    <body>
+    <h3>Muito obrigado por se increver no Prêmio de Educação Criativa e Inovadora do Instituto Criativo</h3>
+    <p>Registramos seu projeto em nosso sistema, agora é só aguardar o resultado!<br/>
+    Seu número de matrícula do projeto é <strong>'. $hash .'</strong>.</p>
+    <p>Para consultar sua inscrição, acesse <a href="http://institutocriativo.org.br/concurso">institutocriativo.org.br/concurso</a> e clique em consultar inscrição.<br/>
+    É necessário apenas o CPF do responsável e o número de matrícula do projeto.</p>
+    <p>Atenciosamente,<br/>
+    Organização do Prêmio de Educação Criativa e Inovadora do Instituto Criativo</p>
+    <p><a href="http://institutocriativo.org.br/">Instituto Criativo</a></p>
+    </body>
+    </html>';
+    $headers='From: <concurso2018@institutocriativo.org.br>' . "\r\n";
+    $headers.='Reply-To: <concurso2018@institutocriativo.org.br>' . "\r\n";
+    $headers.='X-Mailer: PHP/' . phpversion() ."\r\n";
+    $headers.= 'MIME-Version: 1.0' . "\r\n";
+    $headers.= 'Content-type: text/html; charset=utf-8 '. "\r\n";
+
+    if (mail($to, $subject, $content, $headers)) {
+    return "Sua matrícula foi concluída. Email enviado para <" . $email . ">, pode demorar até 30 minutos para chegar. Por favor checar sua caixa de spam caso ele não apareça na caixa principal.";
+    } else {
+    return "Sua matrícula foi concluída, mas ocorreu um erro ao enviar o email de confirmação. A matrícula do seu projeto é " . $hash . " e pode acompanhar-lo na seção de 'consultar inscrição' apresentando o seu CPF. Por favor, anote a matrícula em algum lugar seguro.";
+    }
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $status = "POST";
+    $status = "Favor revisar o formulário, corrigir os alertas e clicar em finalizar inscrição novamente. Caso tenha enviando o documento PDF, selecione o arquivo novamente.";
     $firstname = validate_input($_POST["firstname"]);
     if(is_string($firstname) and $firstname != "") {
         $validfirstname = true;
@@ -377,12 +402,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $errdegree = "Formação em branco.";
     }
-    if(validate_input($_POST["nodocument"]) == "1") {
-        $nodocument = true;
-    }
-    if(!$validpdf and !$nodocument) {
-        $errpdf = "Nenhum arquivo enviado nem a caixa \"Não preciso enviar comprovante\" marcada.";
-    }
     $institution = validate_input($_POST["institution"]);
     if(is_string($institution) and $institution != "") {
         $validinstitution = true;
@@ -426,6 +445,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $category = "EI";
         }
     }
+    if(validate_input($_POST["nodocument"]) == "1") {
+        $nodocument = true;
+    } else {
+        if (isset($_FILES["pdfdocument"])) {
+            $file = $_FILES["pdfdocument"];
+            $pdfsent = true;
+            $pdf_path = "pdf2018/";
+            $pdf_name = $cpf . $category . ".pdf";
+            $extension = pathinfo(strtolower(basename($file['name'])), PATHINFO_EXTENSION);
+            $validpdfname = true;
+            if (file_exists($pdf_path . $pdf_name)) {
+                $validpdfname = false;
+                $errpdf = "Erro interno";
+            }
+            $validpdfsize = false;
+            if ($file["size"] < 5000000) {
+                $validpdfsize = true;
+            } else {
+                $errpdf = "Arquivo muito grande.";
+            }
+            $validpdfextension = false;
+            if ($extension == "pdf") {
+                $validpdfextension = true;
+            } else {
+                $errpdf = "Favor enviar um arquivo PDF.";
+            }
+            if ($validpdfname and $validpdfextension and $validpdfsize) $validpdf = true;
+        }
+    }
+    if(!$validpdf and !$nodocument) {
+        $errpdf = "Nenhum arquivo enviado nem a caixa \"Não preciso enviar comprovante\" marcada.";
+    }
     $theme = validate_input($_POST["theme"]);
     if(is_string($theme) and $theme != "") {
         $validtheme = true;
@@ -465,10 +516,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $members = validate_input($_POST["members"]);
     
     if($validfirstname and $validsecondname and $validrg and $validcpf and $validcep and $validstreet and $validarea and $validcity and $validstate and $validemail and $validemailverify and $validddd1 and $validphone1 and $validddd2 and $validphone2 and $validrole and $validdegree and $validinstitution and $validunity and $validcategory and $validtheme and $validtitle and $validdate and $validvideo and $validsummary and $agree and ($validpdf or $nodocument)) {
-        $status = "Em processo";
+        $status = "Ocorreu um erro e sua matrícula não pode ser concluída, por favor, contate concurso2018@institutocriativo.org.br com o assunto 'Erro de conexão' relatando o ocorrido.";
         $Database_connection = mysqli_connect("localhost", $Database_Username, $Database_Password, $Database_Name);
         if($Database_connection === false) {
-            $status = "Erro de conexão com o DB";
+            $status = "Ocorreu um erro e sua matrícula não pode ser concluída, por favor, contate concurso2018@institutocriativo.org.br com o assunto 'Erro de conexão' relatando o ocorrido.";
         } else {
             $hash = $cpf . $category;
             $sql = 'INSERT INTO subscriptions2018 (firstname , secondname, rg, cpf, cep, street, street2, 
@@ -506,9 +557,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "'. $Database_connection->real_escape_string(($nodocument)?"1":"0") .'",
             "'. $Database_connection->real_escape_string($hash) .'");';
             if(mysqli_query($Database_connection, $sql)){
-                $status = "Records added successfully.";
+                $status = "Sua inscrição foi incluida em nosso sistema, mas não foi possível concluir-la,  por favor, contate concurso2018@institutocriativo.org.br com o assunto 'Inscrição não conluída' relatando o ocorrido.";
+                $subscriptionquery = mysqli_query($Database_connection, 'SELECT id FROM subscriptions2018 WHERE hashkey LIKE "' . $hash . '";');
+                $subscriptionrow = mysqli_fetch_assoc($subscriptionquery);
+                $subscriptionid = $subscriptionrow["id"] + 100;
+                if (!$nodocument) {
+                    if (move_uploaded_file($file["tmp_name"], $pdf_path . $pdf_name)) {
+                        $status = sendMail($email, $subscriptionid);
+                    } else {
+                        $status = "Sua inscrição foi quase concluída, mas ocorreu um erro ao salvar seu arquivo pdf, por favor, contate concurso2018@institutocriativo.org.br com o assunto 'Erro ao salvar documento' relatando o ocorrido, o documento em anexo, CPF e a categoria do seu projeto.";
+                    }
+                } else {
+                    $status = sendMail($email, $subscriptionid);
+                }
             } else{
-                $status = "ERROR: Could not able to execute sql: " . mysqli_error($Database_connection);
+                $status = "Ou você já inscreveu um projeto nessa categoria ou ocorreu interno, caso ache que ocorreu um erro interno: por favor, contate concurso2018@institutocriativo.org.br com o assunto 'Erro interno' relatando o ocorrido.";
             }
         }
         
@@ -527,12 +590,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Inscrição</title>
 </head>
 <body>
-<?php
-echo $status;
-?>
 <form method="post" action="inscricao.php" enctype="multipart/form-data">
     <h1>Inscrição</h1>
-    <p class="error">* campo obrigatório</p>
+    <h3><?php echo htmlspecialchars($status);?></h3>
+    <p class="error">* = campo obrigatório</p>
     <h2>Dados do responsável</h2>
     <p>Primeiro nome (ex: João):</p>
     <input type="text" name="firstname" value="<?php echo $firstname;?>"/>
@@ -626,10 +687,10 @@ echo $status;
     <h2>Dados da Instituição</h2>
     <p>Nome da instituição:</p>
     <input type="text" name="institution" value="<?php echo $institution;?>"/>
-    <p class="error"><?php echo $errinstitution; ?></p>
+    <p class="error">* <?php echo $errinstitution; ?></p>
     <p>Unidade administrativa:</p>
     <input type="text" name="unity" value="<?php echo $unity;?>"/>
-    <p class="error"><?php echo $errunity; ?></p>
+    <p class="error">* <?php echo $errunity; ?></p>
     <h2>Dados do Projeto</h2>
     <p>Categoria do projeto:</p>
     <select name="category">

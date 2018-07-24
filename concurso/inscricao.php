@@ -1,6 +1,8 @@
 <?php
 
 # db
+# messagem de erro
+# tirar não enviar o documento
 # CREATE TABLE subscriptions2018 (id INT PRIMARY KEY AUTO_INCREMENT, firstname VARCHAR(65535) NOT NULL, secondname VARCHAR(65535) NOT NULL, rg VARCHAR(65535) NOT NULL, cpf VARCHAR(65535) NOT NULL, cep VARCHAR(65535) NOT NULL, street VARCHAR(65535) NOT NULL, street2 VARCHAR(65535), number VARCHAR(65535), area VARCHAR(65535) NOT NULL, city VARCHAR(65535) NOT NULL, state VARCHAR(2) NOT NULL, email VARCHAR(65535) NOT NULL, ddd1 VARCHAR(65535) NOT NULL, phone1 VARCHAR(65535) NOT NULL, ddd2 VARCHAR(65535), phone2 VARCHAR(65535), role VARCHAR(65535) NOT NULL, degree VARCHAR(65535) NOT NULL, institution VARCHAR(65535) NOT NULL, unity VARCHAR(65535) NOT NULL, category VARCHAR(5) NOT NULL, theme VARCHAR(65535) NOT NULL, title VARCHAR(65535) NOT NULL, date VARCHAR(65535) NOT NULL, video VARCHAR(65535) NOT NULL, summary VARCHAR(65535) NOT NULL, members VARCHAR(65535), partners VARCHAR(65535), agree VARCHAR(3) NOT NULL, pdf VARCHAR(3) NOT NULL, hashkey VARCHAR(200), status VARCHAR(65535) NOT NULL, UNIQUE(hashkey));
 
 $Database_Name = 'instit93_concurso2018';
@@ -200,11 +202,13 @@ function sendMail($email, $hash) {
     <p><a href="http://institutocriativo.org.br/">Instituto Criativo</a></p>
     </body>
     </html>';
-    $headers='From: <concurso2018@institutocriativo.org.br>' . "\r\n";
-    $headers.='Reply-To: <concurso2018@institutocriativo.org.br>' . "\r\n";
+    $headers='From: Concurso2018 <concurso2018@institutocriativo.org.br>' . "\r\n";
+    $headers.='Reply-To: Concurso2018 <concurso2018@institutocriativo.org.br>' . "\r\n";
     $headers.='X-Mailer: PHP/' . phpversion() ."\r\n";
     $headers.= 'MIME-Version: 1.0' . "\r\n";
-    $headers.= 'Content-type: text/html; charset=utf-8 '. "\r\n";
+    $header .= "Content-Transfer-Encoding: 8bit \r\n";
+    $header .= "Date: ".date("r (T)")." \r\n";
+    $headers.= 'Content-type: text/html; charset=UTF-8 '. "\r\n";
 
     if (mail($to, $subject, $content, $headers)) {
     return "Sua matrícula foi concluída. Email enviado para <" . $email . ">, pode demorar até 30 minutos para chegar. Por favor checar sua caixa de spam caso ele não apareça na caixa principal.";
@@ -214,7 +218,7 @@ function sendMail($email, $hash) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $status = "Favor revisar o formulário, corrigir os alertas e clicar em finalizar inscrição novamente. Caso tenha enviando o documento PDF, selecione o arquivo novamente.";
+    $status = "Por favor revisar o formulário, corrigir os alertas e clicar em finalizar inscrição novamente. Caso tenha enviado o documento PDF, selecione o arquivo novamente.";
     $firstname = validate_input($_POST["firstname"]);
     if(is_string($firstname) and $firstname != "") {
         $validfirstname = true;
@@ -231,7 +235,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(is_string($rg) and $rg != "") {
         $validrg = true;
     } else {
-        $errrg = "RG inválido.";
+        $errrg = "RG em branco.";
     }
     $cpf = validate_input($_POST["cpf"]);
     if(is_string($cpf) and $cpf != "" and !(preg_match("/[^0123456789]/", $cpf)) and verifycpf($cpf)) {
@@ -394,7 +398,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(is_string($role) and $role != "") {
         $validrole = true;
     } else {
-        $errrole = "Cargo nome em branco.";
+        $errrole = "Cargo em branco.";
     }
     $degree = validate_input($_POST["degree"]);
     if(is_string($degree) and $degree != "") {
@@ -445,37 +449,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $category = "EI";
         }
     }
-    if(validate_input($_POST["nodocument"]) == "1") {
-        $nodocument = true;
-    } else {
-        if (isset($_FILES["pdfdocument"])) {
-            $file = $_FILES["pdfdocument"];
-            $pdfsent = true;
-            $pdf_path = "pdf2018/";
-            $pdf_name = $cpf . $category . ".pdf";
-            $extension = pathinfo(strtolower(basename($file['name'])), PATHINFO_EXTENSION);
-            $validpdfname = true;
-            if (file_exists($pdf_path . $pdf_name)) {
-                $validpdfname = false;
-                $errpdf = "Erro interno";
-            }
-            $validpdfsize = false;
-            if ($file["size"] < 5000000) {
-                $validpdfsize = true;
-            } else {
-                $errpdf = "Arquivo muito grande.";
-            }
-            $validpdfextension = false;
-            if ($extension == "pdf") {
-                $validpdfextension = true;
-            } else {
-                $errpdf = "Favor enviar um arquivo PDF.";
-            }
-            if ($validpdfname and $validpdfextension and $validpdfsize) $validpdf = true;
+    if (isset($_FILES["pdfdocument"])) {
+        $file = $_FILES["pdfdocument"];
+        $pdfsent = true;
+        $pdf_path = "pdf2018/";
+        $pdf_name = $cpf . $category . ".pdf";
+        $extension = pathinfo(strtolower(basename($file['name'])), PATHINFO_EXTENSION);
+        $validpdfname = true;
+        if (file_exists($pdf_path . $pdf_name)) {
+            $validpdfname = false;
+            $errpdf = "Erro interno";
         }
-    }
-    if(!$validpdf and !$nodocument) {
-        $errpdf = "Nenhum arquivo enviado nem a caixa \"Não preciso enviar comprovante\" marcada.";
+        $validpdfsize = false;
+        if ($file["size"] < 5000000) {
+            $validpdfsize = true;
+        } else {
+            $errpdf = "Arquivo muito grande.";
+        }
+        $validpdfextension = false;
+        if ($extension == "pdf") {
+            $validpdfextension = true;
+        } else {
+            $errpdf = "Favor enviar um arquivo PDF.";
+        }
+        if ($validpdfname and $validpdfextension and $validpdfsize) $validpdf = true;
     }
     $theme = validate_input($_POST["theme"]);
     if(is_string($theme) and $theme != "") {
@@ -522,6 +519,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $status = "Ocorreu um erro e sua matrícula não pode ser concluída, por favor, contate concurso2018@institutocriativo.org.br com o assunto 'Erro de conexão' relatando o ocorrido.";
         } else {
             $hash = $cpf . $category;
+            mysqli_set_charset($Database_connection,"utf8");
             $sql = 'INSERT INTO subscriptions2018 (firstname , secondname, rg, cpf, cep, street, street2, 
             number, area, city, state, email, ddd1, phone1, ddd2, phone2, role, degree, institution, 
             unity, category, theme, title, date, video, summary, members, partners, agree, pdf, hashkey, status) 
@@ -557,7 +555,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "'. $Database_connection->real_escape_string(($nodocument)?"1":"0") .'",
             "'. $Database_connection->real_escape_string($hash) .'", "Enviado");';
             if(mysqli_query($Database_connection, $sql)){
-                $status = "Sua inscrição foi incluida em nosso sistema, mas não foi possível concluir-la,  por favor, contate concurso2018@institutocriativo.org.br com o assunto 'Inscrição não conluída' relatando o ocorrido.";
+                $status = "Sua inscrição foi incluida em nosso sistema, mas não foi possível concluir-la, por favor, contate concurso2018@institutocriativo.org.br com o assunto 'Inscrição não conluída' relatando o ocorrido.";
                 $subscriptionquery = mysqli_query($Database_connection, 'SELECT id FROM subscriptions2018 WHERE hashkey LIKE "' . $hash . '";');
                 $subscriptionrow = mysqli_fetch_assoc($subscriptionquery);
                 $subscriptionid = $subscriptionrow["id"] + 100;
@@ -571,7 +569,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $status = sendMail($email, $subscriptionid);
                 }
             } else{
-                $status = "Ou você já inscreveu um projeto nessa categoria ou ocorreu interno, caso ache que ocorreu um erro interno: por favor, contate concurso2018@institutocriativo.org.br com o assunto 'Erro interno' relatando o ocorrido.";
+                $status = "Você já inscreveu um projeto nessa categoria, pelo regulamento, só pode inscrever outros projetos em outras categorias.";
             }
         }
         
@@ -678,11 +676,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p>Formação Acadêmica:</p>
     <input type="text" name="degree" value="<?php echo $degree;?>"/>
     <p class="error">! <?php echo $errdegree;?></p>
-    <h3>Comprovante de Docência</h3>
+    <h3>Comprovante de docência, discente ou certificado de hipnoterapeuta</h3>
     <p>Documento no formato PDF com tamanho máximo de 5MB</p>
     <input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
     <input type="file" name="pdfdocument"/>
-    <p><input type="checkbox" name="nodocument" value="1" <?php if($nodocument) echo "checked"?>>Não preciso enviar comprovante<p>
     <p class="error">! <?php echo $errpdf; ?></p>
     <h2>Dados da Instituição</h2>
     <p>Nome da instituição:</p>

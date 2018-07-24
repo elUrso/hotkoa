@@ -78,6 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if($Database_connection === false) {
             echo "<p>Não foi possível realizar a consulta.</p>";
         } else {
+            mysqli_set_charset($Database_connection,"utf8");
             $subscriptionquery = mysqli_query($Database_connection, 'SELECT id, status FROM subscriptions2018 WHERE cpf LIKE "' . $cpf . '";');
             if(mysqli_num_rows($subscriptionquery)>0) {
                 while($row = mysqli_fetch_assoc($subscriptionquery)) {

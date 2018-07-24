@@ -96,6 +96,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div id="header">
     <a href="index.html"><div class="anchor-button">Início</div></a>
 </div>
-</script>
 </body>
 </html>

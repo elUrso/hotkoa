@@ -1,0 +1,25 @@
+<form name="login" id="login" method="post" action="admin.php">
+    <input type="text" name="user" value=""/>
+    <input type="password" name="password" id="password" value=""/>
+    <input type="hidden" name="method" id="method" value="login"/>
+    <input type="hidden" name="hash" id="hash" value=""/>
+</form>
+<div onclick="loginsubmit();">
+    login
+</div>
+<script src="js/sha.js"></script>
+<script>
+    function hashkey(str) {
+        var hashgen = new jsSHA("SHA-256", "TEXT");
+        hashgen.update(str);
+        return hashgen.getHash("HEX");
+    }
+    const loginsubmit = () => {
+        const form = document.querySelector("#login");
+        const password = document.querySelector("#password");
+        const hash = document.querySelector("#hash");
+        hash.value = hashkey(password.value);
+        password.value = "";
+        form.submit();
+    }
+</script>

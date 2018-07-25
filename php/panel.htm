@@ -1,0 +1,22 @@
+<form name="login" id="login" method="post" action="admin.php">
+    <input type="hidden" name="method" id="method" value="logout"/>
+    <input type="submit" class="submit" value="logout"/>
+</form>
+<div class="submissions" id="submissions">
+    
+</div>
+<script>
+    const submissions = document.querySelector("#submissions");
+    let dark = true;
+    const addProject = (id, title, cpf, category, status) => {
+        dark = dark?false:true;
+        submissions.innerHTML += 
+`<a href=""><div class="submission ${dark?"darkrow":""}">
+    <div class="id">${id}</div>
+    <div class="title">${title}</div>
+    <div class="cpf">${cpf}</div>
+    <div class="category">${category}</div>
+    <div class="status">${status}</div>
+</div></a>`;
+    }
+</script>

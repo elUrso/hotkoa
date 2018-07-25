@@ -1,0 +1,9 @@
+.submissions {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.submission {
+    display: inline-flex;
+    flex-flow: row nowrap;
+}

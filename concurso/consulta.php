@@ -79,13 +79,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<p>Não foi possível realizar a consulta.</p>";
         } else {
             mysqli_set_charset($Database_connection,"utf8");
-            $subscriptionquery = mysqli_query($Database_connection, 'SELECT id, status FROM subscriptions2018 WHERE cpf LIKE "' . $cpf . '";');
+            $subscriptionquery = mysqli_query($Database_connection, 'SELECT id, title, cpf, category, status FROM subscriptions2018 WHERE cpf LIKE "' . $cpf . '";');
             if(mysqli_num_rows($subscriptionquery)>0) {
+                echo "<script>";
                 while($row = mysqli_fetch_assoc($subscriptionquery)) {
                     echo "<p> Matrícula: " . ($row["id"] + 100). ", status: " . $row["status"] . "</p>";
                 }
+                echo "</script>"
             } else {
-                echo "<p>Não foi econtrado projetos para este cpf.</p>";
+                echo "<p>Não foi econtrado nenhum projeto cadatrado.</p>";
             }
         }
         

@@ -14,7 +14,7 @@ function validate_input($data) {
     return $data;
 }
 
-if(strcmp($_COOKIE["hash"],$session) == 0) {
+if($session !== "" and strcmp($_COOKIE["hash"],$session) == 0) {
     $login = "true";
 }
 
@@ -22,14 +22,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $method = validate_input($_POST["method"]);
     switch ($method) {
         case 'login':
-            if(strcmp($_POST["user"], "admin") == 0 and strcmp($_POST["hash"], $password) == 0) {
-                $login = true;
-                setcookie("hash", $_POST["hash"], time() + (60*60*24));
+            if($password !== "" and strcmp($_POST["user"], "admin") == 0 and strcmp($_POST["hash"], $password) == 0) {
+                $newsession = hash("sha256", $password . time());
+                $Database_connection = mysqli_connect("localhost", $Database_Username, $Database_Password, $Database_Name);
+                if($Database_connection === false) {
+                } else {
+                    mysqli_set_charset($Database_connection,"utf8");
+                    if(mysqli_query($Database_connection, 'UPDATE admin2018 SET session = "' . $newsession . '" WHERE username LIKE "admin"')) {
+                        $login = true;
+                    } else {
+                        $status = "Error creating new session";
+                    }
+                }
+                setcookie("hash", $newsession, time() + (60*60*24));
             }
             break;
         case 'logout':
             setcookie("hash", "", time());
+            $Database_connection = mysqli_connect("localhost", $Database_Username, $Database_Password, $Database_Name);
+            if($Database_connection === false) {
+            } else {
+                mysqli_set_charset($Database_connection,"utf8");
+                if(mysqli_query($Database_connection, 'UPDATE admin2018 SET session = "" WHERE username LIKE "admin"')) {
+                }
+            }
             $login = false;
+            break;
+        case 'newpassword':
+            if($_POST["oldpassword"] == $password and $_POST["user"] == "admin") {
+                setcookie("hash", "", time());
+                $Database_connection = mysqli_connect("localhost", $Database_Username, $Database_Password, $Database_Name);
+                if($Database_connection === false) {
+                } else {
+                    mysqli_set_charset($Database_connection,"utf8");
+                    if(mysqli_query($Database_connection, 'UPDATE admin2018 SET password = "' . $Database_connection->real_escape_string($_POST["newpassword"]) . '", session = "" WHERE username LIKE "admin"')) {
+                    }
+                }
+                $login = false;
+            }
             break;
         case 'update':
             if(isset($_POST["id"]) and !(preg_match("/[^0123456789]/", validate_input($_POST["id"])))) {

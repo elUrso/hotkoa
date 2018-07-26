@@ -1,3 +1,4 @@
+<h1>Login</h1>
 <form name="login" id="login" method="post" action="admin.php">
     <input type="text" name="user" value=""/>
     <input type="password" name="password" id="password" value=""/>
@@ -6,6 +7,18 @@
 </form>
 <div onclick="loginsubmit();">
     login
+</div>
+<h1>Nova senha</h1>
+<form name="updatepassword" id="updatepassword" method="post" action="admin.php">
+    <input type="text" name="user" value=""/>
+    <input type="password" name="oldpassword" id="oldpassword" value=""/>
+    <input type="password" name="newpassword" id="newpassword" value=""/>
+    <input type="password" name="newpassword2" id="newpassword2" value=""/>
+    <input type="hidden" name="method" id="method" value="newpassword"/>
+    <div id="error"></div>
+</form>
+<div onclick="newpasswordsubmit();">
+    novasenha
 </div>
 <script src="js/sha.js"></script>
 <script>
@@ -21,5 +34,20 @@
         hash.value = hashkey(password.value);
         password.value = "";
         form.submit();
+    }
+    const newpasswordsubmit = () => {
+        const form = document.querySelector("#updatepassword");
+        const oldpassword = document.querySelector("#oldpassword");
+        const newpassword = document.querySelector("#newpassword");
+        const newpassword2 = document.querySelector("#newpassword2");
+        const error = document.querySelector("#error");
+        if(newpassword.value === newpassword2.value) {
+            oldpassword.value = hashkey(oldpassword.value);
+            newpassword.value = hashkey(newpassword.value);
+            newpassword2.value = "";
+            form.submit();
+        } else {
+            error.innerHTML = "As senhas não coincidem";
+        }
     }
 </script>

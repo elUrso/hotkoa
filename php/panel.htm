@@ -1,9 +1,12 @@
-<form name="login" id="login" method="post" action="admin.php">
+<h1>Inscrições</h1>
+
+<div class="submissions" id="submissions"></div>
+<div class="datailed" id="detailed"></div>
+<hr/>
+<form name="logout" id="logout" method="post" action="admin.php">
     <input type="hidden" name="method" id="method" value="logout"/>
     <input type="submit" class="submit" value="logout"/>
 </form>
-<div class="submissions" id="submissions"></div>
-<div class="datailed" id="detailed"></div>
 <script>
     const submissions = document.querySelector("#submissions");
     const detailed = document.querySelector("#detailed");
@@ -58,7 +61,7 @@
         <input type="hidden" name="method" id="method" value="update"/>
         <input type="hidden" name="id" id="id" value="${id}"/>
         <textarea class="status" name="status">${status}</textarea>
-        <input type="submit" class="submit" value="Atualizar status do projeto ${id}"/>
+        <input type="submit" class="submit" value="Atualizar status${id}"/>
     </form>
 </div>`;
     }

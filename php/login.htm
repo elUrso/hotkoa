@@ -1,24 +1,30 @@
 <h1>Login</h1>
 <form name="login" id="login" method="post" action="admin.php">
+    <p>Usuário</p>
     <input type="text" name="user" value=""/>
+    <p>Senha</p>
     <input type="password" name="password" id="password" value=""/>
     <input type="hidden" name="method" id="method" value="login"/>
     <input type="hidden" name="hash" id="hash" value=""/>
 </form>
-<div onclick="loginsubmit();">
-    login
+<div onclick="loginsubmit();" class="btn">
+    Acessar
 </div>
 <h1>Nova senha</h1>
 <form name="updatepassword" id="updatepassword" method="post" action="admin.php">
+    <p>Usuário</p>
     <input type="text" name="user" value=""/>
+    <p>Senha Antiga</p>
     <input type="password" name="oldpassword" id="oldpassword" value=""/>
+    <p>Nova Senha</p>
     <input type="password" name="newpassword" id="newpassword" value=""/>
+    <p>Repetir Nova Senha</p>
     <input type="password" name="newpassword2" id="newpassword2" value=""/>
     <input type="hidden" name="method" id="method" value="newpassword"/>
     <div id="error"></div>
 </form>
-<div onclick="newpasswordsubmit();">
-    novasenha
+<div onclick="newpasswordsubmit();" class="btn">
+    Alterar Senha
 </div>
 <script src="js/sha.js"></script>
 <script>

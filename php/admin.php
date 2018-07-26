@@ -176,5 +176,8 @@ if($login) {
 }
 ?>
 </div>
+<div id="header">
+    <a href="admin.php"><div class="anchor-button">Início</div></a>
+</div>
 </body>
 </html>

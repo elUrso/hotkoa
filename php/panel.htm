@@ -23,12 +23,43 @@
             number, area, city, state, email, ddd1, phone1, ddd2, phone2, role, degree, institution, 
             unity, category, theme, title, date, video, summary, members, partners, pdf, status) => {
         submissions.innerHTML = 
-`<div class="submission ${dark?"darkrow":""}">
+`<div class="deatiled">
     <div class="id">${id}</div>
-    <div class="title">${title}</div>
+    <div class="firstname">${firstname}</div>
+    <div class="secondname">${secondname}</div>
+    <div class="rg">${rg}</div>
     <div class="cpf">${cpf}</div>
+    <div class="cep">${cep}</div>
+    <div class="street">${street}</div>
+    <div class="street2">${street2}</div>
+    <div class="number">${number}</div>
+    <div class="area">${area}</div>
+    <div class="city">${city}</div>
+    <div class="state">${state}</div>
+    <div class="email">${email}</div>
+    <div class="ddd1">${ddd1}</div>
+    <div class="phone1">${phone1}</div>
+    <div class="ddd2">${ddd2}</div>
+    <div class="phone2">${phone2}</div>
+    <div class="role">${role}</div>
+    <div class="degree">${degree}</div>
+    <div class="institution">${institution}</div>
+    <div class="unity">${unity}</div>
     <div class="category">${category}</div>
-    <div class="status">${status}</div>
+    <div class="theme">${theme}</div>
+    <div class="title">${title}</div>
+    <div class="date">${date}</div>
+    <div class="video">${video}</div>
+    <div class="summary">${summary}</div>
+    <div class="members">${members}</div>
+    <div class="partners">${partners}</div>
+    <div class="pdf">${pdf}</div>
+    <form name="update" id="update" method="post" action="admin.php">
+        <input type="hidden" name="method" id="method" value="update"/>
+        <input type="hidden" name="id" id="id" value="${id}"/>
+        <textarea class="status" name="status">${status}</textarea>
+        <input type="submit" class="submit" value="Atualizar status do projeto ${id}"/>
+    </form>
 </div>`;
     }
 </script>

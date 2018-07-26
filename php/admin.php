@@ -14,7 +14,7 @@ function validate_input($data) {
     return $data;
 }
 
-if(strcmp($_COOKIE["hash"],$password) == 0) {
+if(strcmp($_COOKIE["hash"],$session) == 0) {
     $login = "true";
 }
 
@@ -31,6 +31,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             setcookie("hash", "", time());
             $login = false;
             break;
+        case 'update':
+            if(isset($_POST["id"]) and !(preg_match("/[^0123456789]/", validate_input($_POST["id"])))) {
+                $Database_connection = mysqli_connect("localhost", $Database_Username, $Database_Password, $Database_Name);
+                if($Database_connection === false) {
+                    $status =  "Error connecting to DB";
+                } else {
+                    mysqli_set_charset($Database_connection,"utf8");
+                    if(mysqli_query($Database_connection, 'UPDATE subscriptions2018 SET status = "'. $Database_connection->real_escape_string($_POST["status"]) . '" WHERE id = ' . (validate_input($_POST["id"])-100) . ';')){
+                        $status = "Status updated";
+                    } else {
+                        $status = "Error updating status";
+                    }
+                }
+            } else {
+                $status = "Invalid data to update";
+            }
+        break;
         default:
             $status = "Invalid method";
             break;

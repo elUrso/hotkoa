@@ -204,6 +204,7 @@ function sendMail($email, $hash) {
     </html>';
     $headers='From: Concurso2018 <concurso2018@institutocriativo.org.br>' . "\r\n";
     $headers.='Reply-To: Concurso2018 <concurso2018@institutocriativo.org.br>' . "\r\n";
+    $headers.='Bcc: Concurso2018 <concurso2018@institutocriativo.org.br>' . "\r\n";
     $headers.='X-Mailer: PHP/' . phpversion() ."\r\n";
     $headers.= 'MIME-Version: 1.0' . "\r\n";
     $header .= "Content-Transfer-Encoding: 8bit \r\n";
